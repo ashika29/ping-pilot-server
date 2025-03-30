@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { config } from 'process';
 
 const ENV = process.env.NODE_ENV;
+console.log('ENV vaue:', ENV);
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -15,8 +16,15 @@ const ENV = process.env.NODE_ENV;
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => {
+        console.log(
+          'Configs:',
+          config.get<string>('DB_USERNAME'),
+          config.get<string>('DB_PASSWORD'),
+          config.get<string>('DB_NAME'),
+        );
         return {
           type: 'postgres',
+          host: 'postgres_db',
           port: 5432,
           username: config.get<string>('DB_USERNAME'),
           password: config.get<string>('DB_PASSWORD'),
