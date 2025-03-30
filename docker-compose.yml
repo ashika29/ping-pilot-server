@@ -7,8 +7,9 @@ services:
     working_dir: /usr/src/app
     volumes:
       - .:/usr/src/app
+      - /usr/src/app/node_modules # Prevents conflicts
     ports:
-      - "3000:3000"
+      - "8000:8000"
     depends_on:
       postgres:
         condition: service_healthy
