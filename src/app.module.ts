@@ -3,25 +3,32 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { config } from 'process';
+import { BullModule } from '@nestjs/bullmq';
 
 const ENV = process.env.NODE_ENV;
-console.log('ENV vaue:', ENV);
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: !ENV ? '.env' : `.env.${ENV}`, // Path to the .env file
       isGlobal: true, // Makes ConfigModule available globally
     }),
+    BullModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        connection: {
+          host: configService.get('QUEUE_HOST'),
+          port: configService.get('QUEUE_PORT'),
+        },
+        defaultJobOptions: { attempts: 3 },
+      }),
+      inject: [ConfigService],
+    }),
+    BullModule.registerQueue({
+      name: 'default',
+    }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => {
-        console.log(
-          'Configs:',
-          config.get<string>('DB_USERNAME'),
-          config.get<string>('DB_PASSWORD'),
-          config.get<string>('DB_NAME'),
-        );
         return {
           type: 'postgres',
           host: 'postgres_db',
