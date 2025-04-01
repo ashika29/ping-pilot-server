@@ -11,10 +11,6 @@ import { SeederModule } from './database/seeders/seeder.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      envFilePath: !ENV ? '.env' : `.env.${ENV}`, // Path to the .env file
-      isGlobal: true, // Makes ConfigModule available globally
-    }),
     BullModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
