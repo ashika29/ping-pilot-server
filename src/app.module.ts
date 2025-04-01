@@ -4,8 +4,11 @@ import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BullModule } from '@nestjs/bullmq';
+import { User } from './model/users.model';
+import { Role } from './model/roles.model';
+import { ConfigurationModule } from './configuration/configuration.module';
+import { SeederModule } from './database/seeders/seeder.module';
 
-const ENV = process.env.NODE_ENV;
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -26,20 +29,8 @@ const ENV = process.env.NODE_ENV;
     BullModule.registerQueue({
       name: 'default',
     }),
-    TypeOrmModule.forRootAsync({
-      inject: [ConfigService],
-      useFactory: (config: ConfigService) => {
-        return {
-          type: 'postgres',
-          host: 'postgres_db',
-          port: 5432,
-          username: config.get<string>('DB_USERNAME'),
-          password: config.get<string>('DB_PASSWORD'),
-          database: config.get<string>('DB_NAME'),
-          synchronize: true,
-        };
-      },
-    }),
+    ConfigurationModule,
+    SeederModule,
   ],
   controllers: [AppController],
   providers: [AppService],
