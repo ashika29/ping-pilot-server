@@ -1,5 +1,14 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  JoinColumn,
+  ManyToOne,
+  BeforeInsert,
+  BeforeUpdate,
+} from 'typeorm';
 import { Role } from './roles.model';
+import * as bcrypt from 'bcrypt';
 
 @Entity('users')
 export class User {
@@ -18,7 +27,8 @@ export class User {
   @Column({ default: 0 })
   is_blocked: boolean;
 
-  @OneToOne(() => Role, (role) => role.user)
+  @ManyToOne(() => Role, (role) => role.user)
+  @JoinColumn({ name: 'role_id' })
   role: Role;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
@@ -26,4 +36,12 @@ export class User {
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updated_at: Date;
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  private async hashPassword() {
+    if (this.password) {
+      this.password = await bcrypt.hash(this.password, 10);
+    }
+  }
 }
