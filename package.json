@@ -8,7 +8,6 @@
   "scripts": {
     "build": "nest build",
     "db:seed": "node -r tsconfig-paths/register -r ts-node/register src/database/seeders/seed.ts",
-    "db:seed-reset": "node -r tsconfig-paths/register -r ts-node/register src/database/seeders/seed.reset.ts",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nodemon --legacy-watch --watch src --exec node -r tsconfig-paths/register -r ts-node/register src/main.ts",
@@ -22,6 +21,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+   "@faker-js/faker": "^8.4.1",
     "@fastify/multipart": "^9.0.3",
     "@nestjs/bullmq": "^11.0.2",
     "@nestjs/common": "^11.0.1",
@@ -39,7 +39,8 @@
     "pg": "^8.14.1",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
-    "typeorm": "^0.3.21"
+    "typeorm": "^0.3.21",
+    "typeorm-extension": "^3.7.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
