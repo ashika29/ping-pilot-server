@@ -1,26 +1,22 @@
-import { NestFactory } from '@nestjs/core';
-import { SeederModule } from './seeder.module';
-import { SeederService } from './seeder.service';
-import { Logger } from '@nestjs/common';
+import dbConfig from 'src/configuration/dbConfig';
+import { DataSource, DataSourceOptions } from 'typeorm';
+import { runSeeders, SeederOptions } from 'typeorm-extension';
 
-async function bootstrap() {
-  NestFactory.createApplicationContext(SeederModule)
-    .then((appContext) => {
-      const seeder = appContext.get(SeederService);
-      const logger = appContext.get(Logger);
-      seeder
-        .seed()
-        .then(() => {
-          logger.debug('Seeding complete!');
-        })
-        .catch((error) => {
-          logger.error('Seeding failed!');
-          throw error;
-        })
-        .finally(() => appContext.close());
-    })
-    .catch((error) => {
-      throw error;
-    });
-}
-bootstrap();
+import { MainSeeder } from './main.seeder';
+import { UserFactory } from '../factories/user.factory';
+import { RoleFactory } from '../factories/role.factory';
+import { RoleSeeder } from './role.seeder';
+import { UserSeeder } from './user.seeder';
+
+const options: DataSourceOptions & SeederOptions = {
+  ...dbConfig(),
+  factories: [UserFactory, RoleFactory],
+  seeds: [RoleSeeder, UserSeeder, MainSeeder],
+};
+
+const datasource = new DataSource(options);
+datasource.initialize().then(async () => {
+  await datasource.synchronize(true);
+  await runSeeders(datasource);
+  process.exit();
+});

@@ -29,7 +29,7 @@ export class User {
 
   @ManyToOne(() => Role, (role) => role.user)
   @JoinColumn({ name: 'role_id' })
-  role: Role;
+  role!: Role;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;
