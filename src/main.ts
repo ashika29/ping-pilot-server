@@ -5,6 +5,8 @@ import {
 } from '@nestjs/platform-fastify';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
+import cors from '@fastify/cors';
+import cookie from '@fastify/cookie';
 
 async function bootstrap() {
   const host = process.env.HOST || '0.0.0.0';
@@ -14,10 +16,17 @@ async function bootstrap() {
     new FastifyAdapter(),
   );
   app.setGlobalPrefix('/api/v1');
-  app.enableCors({
-    origin: ['*'],
+
+  await app.register(cors, {
+    origin: true, // Replace on production frontend URL
+    credentials: true, // Allow cookies to be sent
   });
-  app.useGlobalPipes(new ValidationPipe());
+
+  await app.register(cookie, {
+    secret: 'y6£EY08GL90',
+  });
+
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   await app.listen(port, host);
   console.log(`🚀 Server is running at http://${host}:${port}`);
 }
