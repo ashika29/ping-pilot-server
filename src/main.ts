@@ -35,4 +35,7 @@ async function bootstrap() {
     `📄 Swagger API docs available at http://${host}:${port}/api-docs`,
   );
 }
-bootstrap();
+
+bootstrap().catch((error) => {
+  console.error('Error during application bootstrap:', error);
+});
