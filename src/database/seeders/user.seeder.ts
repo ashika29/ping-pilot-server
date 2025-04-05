@@ -1,4 +1,3 @@
-import { Role } from 'src/model/roles.model';
 import { User } from 'src/model/users.model';
 import { DataSource } from 'typeorm';
 import { Seeder, SeederFactoryManager } from 'typeorm-extension';
@@ -9,8 +8,8 @@ export class UserSeeder implements Seeder {
     factoryManager: SeederFactoryManager,
   ): Promise<any> {
     console.log('User seeding  started...');
-    let userRepository = dataSource.getRepository(User);
-    let userDatas = userRepository.create([
+    const userRepository = dataSource.getRepository(User);
+    const userDatas = userRepository.create([
       {
         name: 'Saravana',
         email: 'saravana@pingpilot.com',
