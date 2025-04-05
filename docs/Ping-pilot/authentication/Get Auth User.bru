@@ -1,0 +1,23 @@
+meta {
+  name: Get Auth User
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{BASE_URL}}/user/me
+  body: none
+  auth: digest
+}
+
+headers {
+  Cookie: pilot_token=: {{auth_cookie}}
+}
+
+body:json {
+  {
+    "email":"sara@pingpilot.com",
+    "password":"12345678",
+    "password_confirm":"12345678"
+  }
+}

@@ -1,0 +1,19 @@
+meta {
+  name: Singup Request
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{BASE_URL}}/auth/register
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "email":"sara@pingpilot.com",
+    "password":"12345678",
+    "password_confirm":"12345678"
+  }
+}

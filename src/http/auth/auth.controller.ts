@@ -1,28 +1,40 @@
-import { Body, Controller, Post, Res } from '@nestjs/common';
+import { Body, Controller, Post, Res, UseInterceptors } from '@nestjs/common';
 import { FastifyReply } from 'fastify';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
+import { SanitizeInterceptor } from 'src/common/interceptors/sanitize-response.interceptor';
+import { LoginResponseTransformer } from './transformers/login-response.transformer';
+import { RegisterDto } from './dto/register.dto';
+import { setAuthCookie } from 'src/utils/set-auth-cookie';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('login')
+  @UseInterceptors(new SanitizeInterceptor(LoginResponseTransformer))
   async login(
     @Body() loginDto: LoginDto,
     @Res({ passthrough: true }) res: FastifyReply,
   ) {
     const { user, token } = await this.authService.login(loginDto);
-
-    res.setCookie('pilot_token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'none',
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    });
-
+    setAuthCookie(res, token);
     return {
       message: 'Login successful',
+      user,
+    };
+  }
+
+  @Post('register')
+  @UseInterceptors(new SanitizeInterceptor(LoginResponseTransformer))
+  async register(
+    @Body() registerDto: RegisterDto,
+    @Res({ passthrough: true }) res: FastifyReply,
+  ) {
+    const { user, token } = await this.authService.signup(registerDto);
+    setAuthCookie(res, token);
+    return {
+      message: 'User resgistered',
       user,
     };
   }
