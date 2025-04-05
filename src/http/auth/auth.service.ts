@@ -4,6 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
+import { User } from 'src/model/users.model';
 
 @Injectable()
 export class AuthService {
@@ -18,9 +19,7 @@ export class AuthService {
       loginDto.password,
     );
 
-    const token = this.jwtService.sign({
-      sub: user.id,
-    });
+    const token = this.getToken(user);
 
     return { user, token };
   }
@@ -31,10 +30,19 @@ export class AuthService {
       registerDto.password,
     );
 
-    const token = this.jwtService.sign({
-      sub: user.id,
-    });
+    const token = this.getToken(user);
 
     return { user, token };
+  }
+
+  getToken(user: User) {
+    return this.jwtService.sign(
+      {
+        sub: user.id,
+      },
+      {
+        expiresIn: '30m',
+      },
+    );
   }
 }

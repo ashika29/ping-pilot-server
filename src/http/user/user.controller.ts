@@ -8,7 +8,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @UseGuards(AuthGuard('jwt'))
-  @Post('me')
+  @Get('me')
   async me(@CurrentUser() user: any) {
     return user;
   }
