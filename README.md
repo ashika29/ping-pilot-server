@@ -15,6 +15,7 @@ Ping Pilot Server is a backend application designed to support a health check an
   - [Running Tests](#running-tests)
   - [API Documentation](#api-documentation)
 - [Project Structure](#project-structure)
+- [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -99,7 +100,7 @@ Before you begin, ensure you have the following installed on your machine:
    npm run start:dev
    ```
 
-4. Access the server at `http://localhost:3000`.
+4. Access the server at `http://<process.env.HOST>:<process.env.PORT>`.
 
 ### Running Tests
 
@@ -121,7 +122,7 @@ To ensure everything is working as expected, run the tests:
 Swagger UI is available for exploring and testing API endpoints. After starting the server, access the documentation at:
 
 ```
-http://localhost:3000/api-docs
+http://<process.env.HOST>:<process.env.PORT>/api-docs
 ```
 
 ---
@@ -144,6 +145,37 @@ ping-pilot-server/
 ├── README.md                     # Project documentation
 └── tsconfig.json                 # TypeScript configuration
 ```
+
+---
+
+## Troubleshooting
+
+### Use the Latest Node.js and npm
+
+Ensure you are using the latest versions of Node.js and npm to avoid compatibility issues. You can update them using the following commands:
+
+```bash
+# Update Node.js to the latest version (requires nvm)
+nvm install node
+
+# Use the recently installed version of node
+nvm use <versionThatYouJustInstalled>
+
+# Update npm to the latest version
+npm install -g npm@latest
+
+```
+
+### Environment Variables
+
+Make sure to create a `.env` file in the root directory of the project. The following variables are required:
+
+```env
+HOST
+PORT
+```
+
+You can refer to the `.env.example` file for additional configuration hints.
 
 ---
 
