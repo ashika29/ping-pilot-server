@@ -1,11 +1,11 @@
 meta {
-  name: Get Auth User
+  name: Post logout
   type: http
-  seq: 3
+  seq: 5
 }
 
-get {
-  url: {{BASE_URL}}/user/me
+post {
+  url: {{BASE_URL}}/auth/logout
   body: none
   auth: bearer
 }
@@ -24,4 +24,13 @@ body:json {
     "password":"12345678",
     "password_confirm":"12345678"
   }
+}
+
+script:post-response {
+  
+  if (res.status === 204) {
+    bru.setEnvVar("token", "");
+    bru.setEnvVar("refresh_token","")
+  } 
+  
 }

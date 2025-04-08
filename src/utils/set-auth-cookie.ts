@@ -8,3 +8,11 @@ export function setAuthCookie(res: FastifyReply, token: string) {
     path: '/',
   });
 }
+
+export function setRefreshTokenCookie(res: FastifyReply, token: string) {
+  res.setCookie('refresh_token', token, {
+    httpOnly: true,
+    path: '/refresh',
+    maxAge: 7 * 24 * 60 * 60,
+  });
+}

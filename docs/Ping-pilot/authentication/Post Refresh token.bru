@@ -1,13 +1,21 @@
 meta {
-  name: Singup Request
+  name: Post Refresh token
   type: http
-  seq: 2
+  seq: 4
 }
 
 post {
-  url: {{BASE_URL}}/auth/register
-  body: json
-  auth: inherit
+  url: {{BASE_URL}}/auth/refresh?refresh_token={{refresh_token}}
+  body: none
+  auth: none
+}
+
+params:query {
+  refresh_token: {{refresh_token}}
+}
+
+headers {
+  : 
 }
 
 body:json {
@@ -22,5 +30,4 @@ script:post-response {
   let data = res.getBody();
   let token = bru.setEnvVar("token", data.token);
   let refershToken = bru.setEnvVar("refresh_token",data.refreshToken)
-  
 }

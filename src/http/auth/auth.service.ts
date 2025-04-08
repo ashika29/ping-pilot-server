@@ -19,9 +19,9 @@ export class AuthService {
       loginDto.password,
     );
 
-    const token = this.getToken(user);
+    let { token, refreshToken } = await this.getAccessAndRefreshToken(user);
 
-    return { user, token };
+    return { user, token, refreshToken };
   }
 
   async signup(registerDto: RegisterDto) {
@@ -30,9 +30,15 @@ export class AuthService {
       registerDto.password,
     );
 
-    const token = this.getToken(user);
+    let { token, refreshToken } = await this.getAccessAndRefreshToken(user);
 
-    return { user, token };
+    return { user, token, refreshToken };
+  }
+
+  async getAccessAndRefreshToken(user: User) {
+    const token = this.getToken(user);
+    const refreshToken = this.getRefreshToken(user);
+    return { token, refreshToken };
   }
 
   getToken(user: User) {
@@ -41,7 +47,18 @@ export class AuthService {
         sub: user.id,
       },
       {
-        expiresIn: '30m',
+        expiresIn: '15m',
+      },
+    );
+  }
+
+  getRefreshToken(user: User) {
+    return this.jwtService.sign(
+      {
+        sub: user.id,
+      },
+      {
+        expiresIn: '7d',
       },
     );
   }

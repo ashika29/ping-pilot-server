@@ -17,6 +17,13 @@ body:json {
   }
 }
 
+script:post-response {
+  let data = res.getBody();
+  let token = bru.setEnvVar("token", data.token);
+  let refershToken = bru.setEnvVar("refresh_token",data.refreshToken)
+  
+}
+
 tests {
   
   

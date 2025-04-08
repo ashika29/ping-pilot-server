@@ -1,32 +1,36 @@
-// jwt.strategy.ts
+// strategies/refresh-token.strategy.ts
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
+import { FastifyRequest } from 'fastify';
 import { ConfigService } from '@nestjs/config';
 import { UserService } from 'src/http/user/user.service';
-import { FastifyRequest } from 'fastify';
+
+type RefreshTokenQuery = {
+  refresh_token?: string;
+};
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
+export class RefreshTokenStrategy extends PassportStrategy(
+  Strategy,
+  'refresh-token',
+) {
   constructor(
     private configService: ConfigService,
     private userService: UserService,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
-        (req: FastifyRequest) => {
-          const cookieToken = req.cookies?.pilot_token;
-          const authHeader = req.headers.authorization;
-          const bearerToken = authHeader?.startsWith('Bearer ')
-            ? authHeader.slice(7)
-            : undefined;
+        (req: FastifyRequest & { query: RefreshTokenQuery }) => {
+          const cookieToken = req.cookies?.refresh_token;
 
-          const token = cookieToken || bearerToken;
-          return token;
+          const queryToken = req.query?.refresh_token as string;
+
+          return cookieToken || queryToken;
         },
       ]),
-      ignoreExpiration: false,
       secretOrKey: configService.get('JWT_SECRET'),
+      ignoreExpiration: false,
     });
   }
 
