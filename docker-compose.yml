@@ -20,6 +20,16 @@ services:
     ports:
       - "6379:6379" # Expose PostgreSQL port
 
+  nginx:
+    build:
+      context: ./docker/nginx
+    ports:
+      - "80:80"
+    networks:
+      - app_network
+    depends_on:
+      - db
+
 volumes:
   db_data:
   redis_data:

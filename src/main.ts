@@ -14,9 +14,22 @@ async function bootstrap() {
   const port = process.env.PORT || 8000;
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
-    new FastifyAdapter(),
+    new FastifyAdapter({
+      logger: {
+        level: 'info',
+        transport: {
+          target: 'pino-pretty',
+          options: {
+            singleLine: true,
+            translateTime: 'HH:MM:ss Z',
+            colorize: true,
+            ignore: 'pid,hostname',
+          },
+        },
+      },
+    }),
   );
-  app.setGlobalPrefix('/api/v1');
+  app.setGlobalPrefix('/v1');
 
   await app.register(cors, {
     origin: true, // Replace on production frontend URL
