@@ -5,6 +5,8 @@ import {
 } from '@nestjs/platform-fastify';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
+import cors from '@fastify/cors';
+import cookie from '@fastify/cookie';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
@@ -12,12 +14,33 @@ async function bootstrap() {
   const port = process.env.PORT || 8000;
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
-    new FastifyAdapter(),
+    new FastifyAdapter({
+      logger: {
+        level: 'info',
+        transport: {
+          target: 'pino-pretty',
+          options: {
+            singleLine: true,
+            translateTime: 'HH:MM:ss Z',
+            colorize: true,
+            ignore: 'pid,hostname',
+          },
+        },
+      },
+    }),
   );
-  app.setGlobalPrefix('/api/v1');
-  app.enableCors({
-    origin: ['*'],
+  app.setGlobalPrefix('/v1');
+
+  await app.register(cors, {
+    origin: true, // Replace on production frontend URL
+    credentials: true, // Allow cookies to be sent
   });
+
+  await app.register(cookie, {
+    secret: 'y6£EY08GL90',
+  });
+
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   app.useGlobalPipes(new ValidationPipe());
 
   // Swagger setup
