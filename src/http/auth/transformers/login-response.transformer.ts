@@ -6,12 +6,6 @@ export class LoginResponseTransformer {
   message: string;
 
   @Expose()
-  token: string;
-
-  @Expose()
-  refreshToken: string;
-
-  @Expose()
   @Type(() => UserResponseTransformer)
   user: UserResponseTransformer;
 }

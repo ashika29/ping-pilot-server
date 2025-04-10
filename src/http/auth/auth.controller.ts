@@ -39,8 +39,6 @@ export class AuthController {
     setRefreshTokenCookie(res, refreshToken);
     return {
       message: 'Login successful',
-      token: token,
-      refreshToken,
       user,
     };
   }
@@ -57,8 +55,6 @@ export class AuthController {
     setRefreshTokenCookie(res, refreshToken);
     return {
       message: 'User resgistered',
-      token: token,
-      refreshToken,
       user,
     };
   }
@@ -73,10 +69,7 @@ export class AuthController {
       await this.authService.getAccessAndRefreshToken(user);
     setAuthCookie(res, token);
     setRefreshTokenCookie(res, refreshToken);
-    return {
-      token,
-      refreshToken,
-    };
+    return res.status(204).send();
   }
 
   @Post('logout')
