@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Login & Get User Info Test</title>
+    <!-- Axios CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+    <h1>API Test Page</h1>
+    <button onclick="login()">Login</button>
+    <button onclick="getUser()">Get User Info</button>
+
+    <script>
+        // Set the base URL and enable credentials
+        axios.defaults.baseURL = 'http://localhost:8000/api/v1';
+        axios.defaults.withCredentials = true;
+        async function login() {
+            try {
+                const response = await axios.post('/auth/login', {
+                    email: 'saravana@pingpilot.com',
+                    password: '12345678'
+                });
+                console.log('Login Response:', response.data);
+            } catch (error) {
+                console.error('Login Error:', error.response?.data || error.message);
+            }
+        }
+
+        async function getUser() {
+            try {
+                const response = await axios.get('/user/me');
+                console.log('User Info:', response.data);
+            } catch (error) {
+                console.error('Get User Error:', error.response?.data || error.message);
+            }
+        }
+    </script>
+</body>
+
+</html>

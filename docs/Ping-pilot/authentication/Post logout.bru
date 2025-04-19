@@ -1,0 +1,28 @@
+meta {
+  name: Post logout
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{BASE_URL}}/auth/logout
+  body: none
+  auth: none
+}
+
+body:json {
+  {
+    "email":"sara@pingpilot.com",
+    "password":"12345678",
+    "password_confirm":"12345678"
+  }
+}
+
+script:post-response {
+  
+  if (res.status === 204) {
+    bru.setEnvVar("token", "");
+    bru.setEnvVar("refresh_token","")
+  } 
+  
+}

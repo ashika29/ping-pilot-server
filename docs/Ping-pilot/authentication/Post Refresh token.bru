@@ -1,0 +1,33 @@
+meta {
+  name: Post Refresh token
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{BASE_URL}}/auth/refresh?refresh_token={{refresh_token}}
+  body: none
+  auth: none
+}
+
+params:query {
+  refresh_token: {{refresh_token}}
+}
+
+headers {
+  : 
+}
+
+body:json {
+  {
+    "email":"sara@pingpilot.com",
+    "password":"12345678",
+    "password_confirm":"12345678"
+  }
+}
+
+script:post-response {
+  let data = res.getBody();
+  let token = bru.setEnvVar("token", data.token);
+  let refershToken = bru.setEnvVar("refresh_token",data.refreshToken)
+}
