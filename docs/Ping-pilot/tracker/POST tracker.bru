@@ -1,0 +1,19 @@
+meta {
+  name: POST tracker
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{BASE_URL}}/trackers
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "url":"google.com",
+    "params":{},
+    "preference":{}
+  }
+}

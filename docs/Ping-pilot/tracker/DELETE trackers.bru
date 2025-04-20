@@ -1,0 +1,19 @@
+meta {
+  name: DELETE trackers
+  type: http
+  seq: 3
+}
+
+delete {
+  url: {{BASE_URL}}/trackers/37
+  body: none
+  auth: inherit
+}
+
+body:json {
+  {
+    "url":"google.com",
+    "params":{},
+    "preference":{}
+  }
+}
