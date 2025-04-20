@@ -4,7 +4,7 @@ import * as nodemailer from 'nodemailer';
 @Injectable()
 export class MailService {
   private transporter = nodemailer.createTransport({
-    host: 'sandbox.smtp.mailtrap.io', // replace with yours
+    host: 'sandbox.smtp.mailtrap.io',
     port: 587,
     auth: {
       user: '34651c058b0903',
@@ -12,10 +12,10 @@ export class MailService {
     },
   });
 
-  async sendUrlDownAlert(url: string, error: string) {
+  async sendUrlDownAlert(url: string, error: string, to: string) {
     await this.transporter.sendMail({
       from: '"Monitor Bot" <monitor@example.com>',
-      to: 'you@example.com',
+      to: to,
       subject: `🔴 URL Down Alert: ${url}`,
       text: `The URL ${url} is not reachable.\n\nError: ${error}`,
     });
