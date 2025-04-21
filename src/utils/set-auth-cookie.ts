@@ -5,7 +5,7 @@ export function setAuthCookie(res: FastifyReply, token: string) {
     httpOnly: true,
     secure: false,
     sameSite: 'lax',
-    path: '/',
+    path: '*',
   });
 }
 
