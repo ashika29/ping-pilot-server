@@ -32,7 +32,7 @@ async function bootstrap() {
   app.setGlobalPrefix('/v1');
 
   await app.register(cors, {
-    origin: true, // Replace on production frontend URL
+    origin: process.env.FRONTEND_URL, // Replace on production frontend URL
     credentials: true, // Allow cookies to be sent
   });
 
