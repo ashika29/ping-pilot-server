@@ -8,6 +8,7 @@ import {
   Query,
   ParseIntPipe,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { TrackerService } from './tracker.service';
 import { CreateTrackerDto } from './dto/create-tracker.dto';
@@ -26,6 +27,7 @@ export class TrackerController {
 
   @Post()
   async createTracker(@CurrentUser() user: any, @Body() dto: CreateTrackerDto) {
+    console.log('Inside create tracker:', { user, dto });
     return await this.trackerService.create(user, dto);
   }
 
